@@ -10,12 +10,13 @@ import sys, os
 
 # Path environment
 current_dir = os.getcwd()
+print(current_dir)
 data_path = os.path.abspath(os.path.join(current_dir, ".", "Data"))
 sys.path.insert(0, data_path)
 
 # Define manual start time in local PDT time ################# CHANGE THIS TO MATCH THE START TIME YOU DESIRE #################
 pdt_tz = pytz.timezone('America/Los_Angeles')
-manual_start_time_naive = datetime(2025, 3, 22, 10, 10, 0)  # 9:00 AM PDT (naive)
+manual_start_time_naive = datetime(2025, 6, 21, 10, 10, 0)  # 9:00 AM PDT (naive)
 
 # Load simulation data 
 pred_file_name = 'padre-sim-converted.csv' #Lat long time values from ES
@@ -62,7 +63,7 @@ df.loc[(df['sunlit'] == True) & (df['SAA']), 'SHARP_mode'] = 'ENGINEERING'
 #   - If sunlit is False: "IDLE"
 #   - Otherwise: "SCIENCE"
 df['MeDDEA_mode'] = 'SCIENCE'
-df.loc[df['sunlit'] == False, 'MeDDEA_mode'] = 'IDLE'
+df.loc[df['sunlit'] == False, 'MeDDEA_mode'] = 'SCIENCE'
 df.loc[(df['sunlit'] == True) & (df['SAA'] ), 'MeDDEA_mode'] = 'IDLE'
 
 
