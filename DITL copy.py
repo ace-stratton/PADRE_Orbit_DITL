@@ -7,7 +7,7 @@ import pytz
 from datetime import datetime, timedelta 
 
 import sys, os
-
+## copy of main script to test out differences. 
 # Path environment
 current_dir = os.getcwd()
 print(current_dir)
@@ -16,10 +16,8 @@ sys.path.insert(0, data_path)
 
 # Define manual start time in local PDT time ################# CHANGE THIS TO MATCH THE START TIME YOU DESIRE #################
 pdt_tz = pytz.timezone('America/Los_Angeles')
-utc_tz = pytz.timezone('UTC')
-manual_start_time_naive = datetime(2025, 6, 13, 10, 00, 0)
-start_time_utc = manual_start_time_naive.astimezone(utc_tz)
-start_time_utc = start_time_utc.replace(tzinfo=None)
+manual_start_time_naive = datetime(2025, 6, 21, 10, 10, 0)
+
 # Load simulation data 
 pred_file_name = 'padre-sim-converted.csv' #Lat long time values from ES
 pred_file_path = os.path.abspath(os.path.join(data_path, pred_file_name))
@@ -47,7 +45,7 @@ df['eclipse'] = ~df['sunlit']
 # Convert timestamp (assumed in seconds) to relative time and then to absolute time
 df['relative_time'] = df['timestamp'] - df['timestamp'][0]
 df['absolute_pdt'] = df['relative_time'].apply(lambda x: manual_start_time_naive + timedelta(seconds=x))
-df['absolute_utc'] = df['relative_time'].apply(lambda x: start_time_utc + timedelta(seconds=x))
+
 # --- Create Mode Columns ---
 
 # Spacecraft Mode: Always "PAYLOAD"
@@ -83,7 +81,7 @@ df['mode_transition'] = df['mode_state'] != df['mode_state'].shift()
 transitions = df[df['mode_transition']].copy()
 
 # Select relevant columns to export:
-transitions_export = transitions[['absolute_pdt','absolute_utc', 'eclipse', 'SAA', 'Spacecraft_mode', 'SHARP_mode', 'MeDDEA_mode',]]
+transitions_export = transitions[['absolute_pdt', 'eclipse', 'SAA', 'Spacecraft_mode', 'SHARP_mode', 'MeDDEA_mode',]]
 
 # Export the transitions to a CSV file
 output_path = os.path.abspath(os.path.join(current_dir, ".", "Output"))
